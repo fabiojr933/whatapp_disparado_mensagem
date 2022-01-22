@@ -1,8 +1,9 @@
 const fs = require('fs');
 const logger = require('../logger/logger');
+const axios = require('axios');
 
-async function envio_mensagem_via_importacao_excel(path) {
-  var envio_mensagem_via_importacao = [];
+async function ler_arquivo01_excel(path) {
+  var ler_arquivo01 = [];
   return new Promise((resolve, reject) => {
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
@@ -11,13 +12,46 @@ async function envio_mensagem_via_importacao_excel(path) {
       var a = data.split('\r\n');
       a.forEach(row => {
         var arr = row.split(';');
-        envio_mensagem_via_importacao.push({ 'id_empresa': arr[0], 'valor': arr[1], 'cliente': arr[2], 'telefone': arr[3], 'empresa': arr[4] });
+        ler_arquivo01.push({ 'cliente': arr[0], 'telefone': arr[1], 'cnpj_cpf': arr[2], 'empresa': arr[3]});
       })
-      resolve(envio_mensagem_via_importacao);
+      ler_arquivo01 = ler_arquivo01.filter((element, index) => index < ler_arquivo01.length - 1);
+      ler_arquivo01.splice(0,1)   
+      resolve(ler_arquivo01);
     });
   });
 }
 
+async function enviar_arquivo01_excel(dados, user, mensagem){  
+  dados.forEach(element => {
+    try {
+      var data = {
+        'session': user.session,
+        'number': '55' + element.telefone,
+        'text': element.cliente + ' ' + mensagem + ' ' + element.empresa
+      }
+      var config = {
+        method: 'POST',
+        url: user.servidor + '/sendText',
+        headers: {
+          'Content-Type': 'application/json',
+          'sessionkey': user.session
+        },
+        data: JSON.stringify(data)
+      };
+      axios(config).then(response => {
+        if (response.data.result != 200) {         
+          res.redirect('/');
+        }
+      }).catch(err => {
+        logger.error(err);      
+      });     
+    } catch (error) {
+      logger.error(error);
+    }   
+  });         
+}
+
 module.exports = {
-  envio_mensagem_via_importacao_excel
+  ler_arquivo01_excel,
+  enviar_arquivo01_excel
 };

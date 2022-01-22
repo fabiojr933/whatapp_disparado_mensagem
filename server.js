@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const whatsappController = require('./src/controllers/whatsappController');
+const middleware = require('./src/middlewares/middleware');
 
 const flash = require('express-flash');
 const bodyParser = require('body-parser');
@@ -8,7 +9,7 @@ const session = require('express-session');
 const routes = require('./routes');
 const path = require('path');
 const csrf = require('csurf');
-//const { middlewareGlobal, checkCsrfError, csrfMiddleware } = require('./src/middlewares/middleware');
+const { middlewareGlobal, checkCsrfError, csrfMiddleware } = require('./src/middlewares/middleware');
 const logger = require('./src/logger/logger');
 
 app.set('view engine', 'ejs');
@@ -24,17 +25,17 @@ app.use(session({
     cookie: {maxAge: 3000000}
 }));
 app.use(flash());
-/*
+
 app.use(csrf());
 
 app.use(middlewareGlobal);
 app.use(checkCsrfError);
 app.use(csrfMiddleware);
 
-*/
+
 
 app.use(routes);
-app.use('/', whatsappController);
+app.use('/', middleware.autenticacao, whatsappController);
 
 app.listen(3000, (req, res) => {
     logger.info('Servidor inicializado');

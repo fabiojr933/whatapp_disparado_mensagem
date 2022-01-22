@@ -11,10 +11,7 @@ exports.middlewareGlobal = (req, res, next) => {
     next();
   };
   
-  exports.checkCsrfError = (err, req, res, next) => {
-    if(err) {
-      return res.render('404');
-    }
+  exports.checkCsrfError = (err, req, res, next) => {    
     next();
   };
   
@@ -30,11 +27,11 @@ exports.middlewareGlobal = (req, res, next) => {
           next();
       }else{
         req.flash('erros', 'Usuario não autenticado');
-        req.session.save(() => res.redirect('/usuario/login')); 
+        req.session.save(() => res.redirect('/login/index')); 
         return;
       }
      }catch (error) {
       req.flash('erros', 'Usuario não autenticado');
-      req.session.save(() => res.redirect('/usuario/login'));    
+      req.session.save(() => res.redirect('/login/index'));    
      }
   }
