@@ -13,6 +13,9 @@ route.get('/whatsapp/mensagem_via_importacao', whatsapp2Controller.mensagem_via_
 route.get('/whatsapp/mensagem_via_imagem', whatsapp2Controller.mensagem_via_imagem);
 route.get('/whatsapp/mensagem_via_contatos', whatsapp2Controller.mensagem_via_contatos);
 
+// Sessão
+route.get('/whatsapp/sessao', whatsapp2Controller.sessao);
+
 
 
 

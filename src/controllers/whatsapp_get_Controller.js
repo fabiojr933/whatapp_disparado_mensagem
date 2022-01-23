@@ -10,3 +10,6 @@ exports.mensagem_via_imagem = async (req, res) => {
 exports.mensagem_via_contatos = async (req, res) => {
     res.render('whatsapp/mensagem_via_contatos');
 }
+exports.sessao = async (req, res) => {
+    res.render('whatsapp/sessao');
+}
